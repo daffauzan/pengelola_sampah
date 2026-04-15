@@ -34,7 +34,7 @@
 
       <div class="col-lg-3 col-md-12 footer-contact">
         <h4>Kontak</h4>
-        <p>Kota Anda</p>
+        <p>Bandung</p>
         <p>Indonesia</p>
         <p class="mt-3"><strong>Email:</strong> support@trashman.com</p>
       </div>

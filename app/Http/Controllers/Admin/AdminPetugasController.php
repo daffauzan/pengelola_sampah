@@ -23,14 +23,15 @@ class AdminPetugasController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
         User::create([
-            'name' => $request->name,
+            'nama' => $request->nama,
             'email' => $request->email,
-            'password' => Hash::make('password'),
+            'password' => Hash::make($request->password),
             'role' => 'petugas'
         ]);
 
@@ -47,12 +48,12 @@ class AdminPetugasController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
             'email' => "required|email|unique:users,email,$id",
         ]);
 
         User::findOrFail($id)->update(
-            $request->only('name', 'email')
+            $request->only('nama', 'email')
         );
 
         return redirect()->route('admin.petugas.index')

@@ -4,29 +4,41 @@
 
 <h1 class="h3 mb-4">Data Laporan Sampah</h1>
 
-<a href="{{ route('laporan.create') }}" class="btn btn-primary mb-3">Tambah</a>
+@if(session('success'))
+  <div class="alert alert-success">{{ session('success') }}</div>
+@endif
+
+<a href="{{ route('admin.laporan.create') }}" class="btn btn-primary mb-3">Tambah</a>
 
 <table class="table table-bordered">
   <tr>
+    <th>Pelapor</th>
     <th>Judul</th>
-    <th>Lokasi</th>
+    <th>Koordinat</th>
+    <th>Status</th>
     <th>Aksi</th>
   </tr>
 
-  @foreach($data as $item)
+  @forelse($laporan as $item)
   <tr>
+    <td>{{ $item->user->nama ?? '-' }}</td>
     <td>{{ $item->judul }}</td>
-    <td>{{ $item->lokasi }}</td>
+    <td>{{ $item->latitude }}, {{ $item->longitude }}</td>
+    <td>{{ ucfirst($item->status) }}</td>
     <td>
-      <a href="{{ route('laporan.edit', $item->id) }}" class="btn btn-warning">Edit</a>
+      <a href="{{ route('admin.laporan.edit', $item->id) }}" class="btn btn-warning">Edit</a>
 
-      <form action="{{ route('laporan.destroy', $item->id) }}" method="POST" style="display:inline;">
+      <form action="{{ route('admin.laporan.destroy', $item->id) }}" method="POST" style="display:inline;">
         @csrf @method('DELETE')
         <button class="btn btn-danger">Hapus</button>
       </form>
     </td>
   </tr>
-  @endforeach
+  @empty
+  <tr>
+    <td colspan="5" class="text-center">Belum ada data laporan.</td>
+  </tr>
+  @endforelse
 </table>
 
 @endsection

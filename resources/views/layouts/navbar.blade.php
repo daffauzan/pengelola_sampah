@@ -15,7 +15,7 @@
 
         @auth
           @if(auth()->user()->role == 'user')
-            <li><a href="/laporan">Laporan Saya</a></li>
+            <li><a href="{{ route('user.index') }}">Laporan Saya</a></li>
           @elseif(auth()->user()->role == 'admin')
             <li><a href="/admin/laporan">Manajemen Laporan</a></li>
           @elseif(auth()->user()->role == 'petugas')
@@ -29,16 +29,16 @@
 
     {{-- AUTH BUTTON --}}
     @guest
-      <a class="btn-getstarted" href="/login">Login</a>
+      <a class="btn-getstarted" href="{{ route('login') }}">Login</a>
     @endguest
 
     @auth
       @if(auth()->user()->role == 'user')
-        <a class="btn-getstarted" href="/dashboard">Dashboard</a>
+        <a class="btn-getstarted" href="{{ route('user.index') }}">Dashboard</a>
       @elseif(auth()->user()->role == 'admin')
-        <a class="btn-getstarted" href="/admin/dashboard">Admin</a>
+        <a class="btn-getstarted" href="{{ route('admin.index') }}">Admin</a>
       @elseif(auth()->user()->role == 'petugas')
-        <a class="btn-getstarted" href="/petugas/dashboard">Petugas</a>
+        <a class="btn-getstarted" href="{{ route('petugas.index') }}">Petugas</a>
       @endif
 
       <form action="/logout" method="POST" style="display:inline;">

@@ -1,6 +1,6 @@
 <ul class="navbar-nav bg-gradient-success sidebar sidebar-dark accordion" id="accordionSidebar">
 
-  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/admin/dashboard">
+  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('admin.index') }}">
     <div class="sidebar-brand-icon">
       <i class="fas fa-recycle"></i>
     </div>
@@ -9,8 +9,8 @@
 
   <hr class="sidebar-divider">
 
-  <li class="nav-item">
-    <a class="nav-link" href="/admin/dashboard">
+  <li class="nav-item {{ request()->routeIs('admin.dashboard') || request()->routeIs('admin.index') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('admin.index') }}">
       <i class="fas fa-fw fa-tachometer-alt"></i>
       <span>Dashboard</span>
     </a>
@@ -20,29 +20,29 @@
 
   <div class="sidebar-heading">Manajemen</div>
 
-  <li class="nav-item">
-    <a class="nav-link" href="/admin/laporan">
+  <li class="nav-item {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('admin.laporan.index') }}">
       <i class="fas fa-trash"></i>
       <span>Laporan Sampah</span>
     </a>
   </li>
 
-  <li class="nav-item">
-    <a class="nav-link" href="/admin/jadwal">
+  <li class="nav-item {{ request()->routeIs('admin.jadwal.*') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('admin.jadwal.index') }}">
       <i class="fas fa-calendar"></i>
       <span>Jadwal Pengangkutan</span>
     </a>
   </li>
 
-  <li class="nav-item">
-    <a class="nav-link" href="/admin/petugas">
+  <li class="nav-item {{ request()->routeIs('admin.petugas.*') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('admin.petugas.index') }}">
       <i class="fas fa-users"></i>
       <span>Petugas</span>
     </a>
   </li>
 
-  <li class="nav-item">
-    <a class="nav-link" href="/admin/log">
+  <li class="nav-item {{ request()->routeIs('admin.log.*') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('admin.log.index') }}">
       <i class="fas fa-history"></i>
       <span>Log Aktivitas</span>
     </a>

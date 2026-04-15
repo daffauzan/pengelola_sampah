@@ -8,12 +8,12 @@
 
 <div id="wrapper">
 
-  @include('admin.layouts.sidebar')
+  @include('petugas.layouts.sidebar')
 
   <div id="content-wrapper" class="d-flex flex-column">
     <div id="content">
 
-      @include('admin.layouts.topbar')
+      @include('petugas.layouts.topbar')
 
       <div class="container-fluid">
         @yield('content')
@@ -32,8 +32,6 @@
 </a>
 
 @include('admin.layouts.script')
-
-@stack('scripts')
 
 </body>
 </html>

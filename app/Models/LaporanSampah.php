@@ -13,8 +13,8 @@ class LaporanSampah extends Model
         'judul',
         'deskripsi',
         'foto',
-        'langitude',
         'latitude',
+        'longitude',
         'status',
     ];
 
