@@ -11,7 +11,10 @@ class AdminLaporanController extends Controller
 {
     public function index()
     {
-        $laporan = LaporanSampah::latest()->get();
+        $laporan = LaporanSampah::with('user')
+            ->latest()
+            ->get();
+
         return view('admin.laporan.index', compact('laporan'));
     }
 
@@ -67,7 +70,8 @@ class AdminLaporanController extends Controller
 
     public function show($id)
     {
-        $laporan = LaporanSampah::findOrFail($id);
+        $laporan = LaporanSampah::with('user')->findOrFail($id);
+
         return view('admin.laporan.show', compact('laporan'));
     }
 

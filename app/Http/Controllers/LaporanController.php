@@ -7,6 +7,17 @@ use Illuminate\Http\Request;
 
 class LaporanController extends Controller
 {
+    private function normalizeCoordinate(?string $value): ?float
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $normalized = str_replace(',', '.', trim($value));
+
+        return is_numeric($normalized) ? (float) $normalized : null;
+    }
+
     public function index()
     {
         $laporan = auth()->user()
@@ -19,12 +30,20 @@ class LaporanController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge([
+            'latitude' => $this->normalizeCoordinate($request->input('latitude')),
+            'longitude' => $this->normalizeCoordinate($request->input('longitude')),
+        ]);
+
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
             'foto' => 'nullable|image|max:2048',
+        ], [
+            'latitude.between' => 'Latitude harus berada di antara -90 sampai 90.',
+            'longitude.between' => 'Longitude harus berada di antara -180 sampai 180.',
         ]);
 
         $fotoPath = null;

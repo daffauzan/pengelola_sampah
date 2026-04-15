@@ -26,11 +26,12 @@
     <td>{{ $item->latitude }}, {{ $item->longitude }}</td>
     <td>{{ ucfirst($item->status) }}</td>
     <td>
-      <a href="{{ route('admin.laporan.edit', $item->id) }}" class="btn btn-warning">Edit</a>
+      <a href="{{ route('admin.laporan.show', $item->id) }}" class="btn btn-info btn-sm">Show</a>
+      <a href="{{ route('admin.laporan.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
 
       <form action="{{ route('admin.laporan.destroy', $item->id) }}" method="POST" style="display:inline;">
         @csrf @method('DELETE')
-        <button class="btn btn-danger">Hapus</button>
+        <button class="btn btn-danger btn-sm">Hapus</button>
       </form>
     </td>
   </tr>

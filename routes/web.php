@@ -70,7 +70,11 @@ Route::middleware(['auth', 'role:admin'])
         })->name('dashboard');
 
         Route::get('/index', function () {
-            return view('admin.index');
+            $totalLaporan = LaporanSampah::count();
+            $jadwalAktif = JadwalPengangkutan::whereDate('tanggal', '>=', now()->toDateString())
+                ->count();
+
+            return view('admin.index', compact('totalLaporan', 'jadwalAktif'));
         })->name('index');
 
         Route::resource('jadwal', AdminJadwalController::class);

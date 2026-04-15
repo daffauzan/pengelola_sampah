@@ -86,12 +86,14 @@
                 <div class="row">
                   <div class="col-md-6 mb-3">
                     <label for="latitude" class="form-label">Latitude</label>
-                    <input type="text" id="latitude" name="latitude" value="{{ old('latitude') }}" class="form-control" required>
+                    <input type="number" id="latitude" name="latitude" value="{{ old('latitude') }}" class="form-control" step="any" min="-90" max="90" placeholder="Contoh: -6.901068" required>
+                    <small class="text-muted">Nilai latitude valid berada di rentang -90 sampai 90.</small>
                   </div>
 
                   <div class="col-md-6 mb-3">
                     <label for="longitude" class="form-label">Longitude</label>
-                    <input type="text" id="longitude" name="longitude" value="{{ old('longitude') }}" class="form-control" required>
+                    <input type="number" id="longitude" name="longitude" value="{{ old('longitude') }}" class="form-control" step="any" min="-180" max="180" placeholder="Contoh: 107.383160" required>
+                    <small class="text-muted">Nilai longitude valid berada di rentang -180 sampai 180.</small>
                   </div>
                 </div>
 

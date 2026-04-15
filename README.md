@@ -57,3 +57,63 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Docker Example
+
+Contoh setup Docker untuk proyek ini sudah disediakan dengan 3 container:
+
+- `app`: Laravel + PHP-FPM + Composer
+- `web`: Nginx
+- `db`: MySQL 8
+
+File yang digunakan:
+
+- `Dockerfile`
+- `docker-compose.yml`
+- `docker/nginx/default.conf`
+- `.dockerignore`
+
+Langkah menjalankan:
+
+```bash
+docker compose up -d --build
+docker compose exec app composer install
+docker compose exec app cp .env.example .env
+```
+
+Lalu sesuaikan konfigurasi database di `.env` menjadi:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=pengelola_sampah
+DB_USERNAME=laravel
+DB_PASSWORD=secret
+```
+
+Setelah itu jalankan:
+
+```bash
+docker compose exec app php artisan key:generate
+docker compose exec app php artisan migrate
+docker compose exec app php artisan db:seed
+```
+
+Aplikasi bisa diakses di:
+
+```text
+http://localhost:8000
+```
+
+Jika ingin build asset frontend:
+
+```bash
+docker compose exec app npm install
+docker compose exec app npm run build
+```
+
+Catatan:
+
+- Port MySQL host dipetakan ke `3307`, jadi dari host gunakan `127.0.0.1:3307`
+- Dari dalam container Laravel, host database tetap `db:3306`
