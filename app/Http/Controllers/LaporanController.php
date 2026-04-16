@@ -49,19 +49,12 @@ class LaporanController extends Controller
 
         $fotoPath = null;
 
-        if ($request->hasFile('foto')) {
-            $fotoPath = Storage::disk('s3')->putFile(
-                'laporan-sampah',
-                $request->file('foto'),
-                ['visibility' => 'public']
-            );
+        $fotoPath = Storage::disk('s3')->putFile(
+            'laporan-sampah',
+            $request->file('foto')
+        );
 
-            if (! $fotoPath) {
-                return back()
-                    ->withInput()
-                    ->withErrors(['foto' => 'Foto gagal diunggah ke penyimpanan S3.']);
-            }
-        }
+        dd($fotoPath);
 
         LaporanSampah::create([
             'user_id' => auth()->id(),
