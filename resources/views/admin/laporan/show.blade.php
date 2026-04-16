@@ -67,21 +67,35 @@
         <h6 class="m-0 font-weight-bold text-primary">Foto Laporan</h6>
       </div>
       <div class="card-body text-center">
-          @if($laporan->foto_url)
-            <img src="{{ $laporan->foto_url }}" alt="Foto laporan {{ $laporan->judul }}">
+        @if(!empty($laporan->foto_url))
+            <div class="mb-3">
+                <img
+                    src="{{ $laporan->foto_url }}"
+                    alt="Foto laporan {{ $laporan->judul }}"
+                    class="img-fluid rounded shadow"
+                    style="max-height: 400px; object-fit: contain;"
+                    loading="lazy"
+                    onerror="this.style.display='none'; document.getElementById('img-fallback').style.display='block';"
+                >
+            </div>
 
             <div>
-                <a href="{{ $laporan->foto_url }}" target="_blank" 
+                <a href="{{ $laporan->foto_url }}" target="_blank"
                   class="btn btn-primary btn-sm">
-                  Lihat ukuran penuh
+                    Lihat ukuran penuh
                 </a>
             </div>
+
+            <div id="img-fallback" class="text-danger mt-2" style="display:none;">
+                Gambar tidak dapat dimuat dari S3
+            </div>
+
         @else
             <p class="text-muted mb-0">
-                Pengguna tidak mengunggah foto pada laporan ini.
+                Tidak ada foto yang diunggah.
             </p>
         @endif
-      </div>
+    </div>
     </div>
   </div>
 </div>
