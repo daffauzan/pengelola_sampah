@@ -3,7 +3,7 @@ name: CI/CD docker pengelola_sampah
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
