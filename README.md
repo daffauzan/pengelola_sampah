@@ -117,3 +117,58 @@ Catatan:
 
 - Port MySQL host dipetakan ke `3307`, jadi dari host gunakan `127.0.0.1:3307`
 - Dari dalam container Laravel, host database tetap `db:3306`
+
+## CI/CD Docker
+
+Workflow GitHub Actions sudah disiapkan di [.github/workflows/docker-cicd.yml](.github/workflows/docker-cicd.yml).
+
+Alurnya:
+
+- `pull_request` ke `master`: build image Docker untuk validasi.
+- `push` ke `master`: build image, push ke Amazon ECR, lalu update service di Amazon ECS.
+
+Catatan penting:
+
+- [docker-compose.yml](docker-compose.yml) tetap dipakai untuk local development.
+- Deploy production pada workflow ini tidak memakai `docker compose`, tetapi memakai image dari ECR yang dijalankan oleh ECS.
+- ECS service dan task definition harus sudah dibuat lebih dulu di AWS.
+
+GitHub Secrets yang harus dibuat:
+
+- `AWS_ACCESS_KEY_ID`: access key IAM untuk push ECR dan deploy ECS
+- `AWS_SECRET_ACCESS_KEY`: secret key IAM
+- `AWS_REGION`: region AWS, misalnya `ap-southeast-2`
+- `ECR_REPOSITORY`: nama repository ECR, misalnya `daffauzan/pengelola_sampah`
+- `ECS_CLUSTER`: nama cluster ECS
+- `ECS_SERVICE`: nama service ECS
+- `ECS_CONTAINER_NAME`: nama container di task definition yang image-nya akan diganti
+- `ECS_TASK_DEFINITION_FAMILY`: family task definition ECS yang aktif saat ini
+
+IAM user atau role yang dipakai workflow minimal perlu izin untuk:
+
+- ECR login dan push image
+- ECS describe/register task definition
+- ECS update service
+- IAM pass role jika task definition memakai execution role atau task role
+
+Alur deploy yang dijalankan workflow:
+
+```bash
+docker build -t <ecr-registry>/<repository>:<git-sha> -t <ecr-registry>/<repository>:latest .
+docker push <ecr-registry>/<repository>:<git-sha>
+docker push <ecr-registry>/<repository>:latest
+aws ecs describe-task-definition --task-definition <family>
+aws ecs register-task-definition --cli-input-json file://task-definition-rendered.json
+aws ecs update-service --cluster <cluster> --service <service> --task-definition <new-revision>
+aws ecs wait services-stable --cluster <cluster> --services <service>
+```
+
+Contoh nilai secret untuk repository ini:
+
+- `AWS_REGION=ap-southeast-2`
+- `ECR_REPOSITORY=daffauzan/pengelola_sampah`
+
+Catatan arsitektur:
+
+- [Dockerfile](Dockerfile) saat ini menghasilkan container PHP-FPM. Jika service ECS Anda ingin langsung menerima traffic HTTP dari ALB, Anda masih perlu container web server terpisah seperti Nginx atau image aplikasi yang sudah menyatukan web server dan PHP.
+- Jika ECS task Anda memang memakai container `app` untuk PHP-FPM dan container lain untuk web, set `ECS_CONTAINER_NAME` ke nama container aplikasi yang image-nya dibangun dari repository ini.

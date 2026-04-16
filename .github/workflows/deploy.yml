@@ -1,43 +1,32 @@
-name: Deploy Laravel to ECS
+name: CI/CD docker pengelola_sampah
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-southeast-2
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Login to Amazon ECR
+      - name: Deploy to EC2
         run: |
-          aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+            cd /var/www/pengelola_sampah
 
-      - name: Build Docker image
-        run: |
-          docker build -t pengelola_sampah:latest .
+            git pull origin main
 
-      - name: Tag image
-        run: |
-          docker tag pengelola_sampah:latest ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:latest
+            docker compose down
+            docker compose build --no-cache
+            docker compose up -d
 
-      - name: Push image
-        run: |
-          docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:latest
-
-      - name: Force ECS deploy
-        run: |
-          aws ecs update-service \
-            --cluster pengelola-cluster \
-            --service pengelola-service \
-            --force-new-deployment
+          EOF

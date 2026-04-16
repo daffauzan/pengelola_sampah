@@ -68,9 +68,9 @@
       </div>
       <div class="card-body text-center">
         @if($laporan->foto_url)
-          <img src="{{ $laporan->foto_url }}" alt="Foto laporan {{ $laporan->judul }}" class="img-fluid rounded shadow-sm mb-3">
+          <img src="{{ asset('storage/' . $laporan->foto_url) }}" alt="Foto laporan {{ $laporan->judul }}" class="img-fluid rounded shadow-sm mb-3">
           <div>
-            <a href="{{ $laporan->foto_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">Lihat ukuran penuh</a>
+            <a href="{{ asset('storage/' . $laporan->foto_url) }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">Lihat ukuran penuh</a>
           </div>
         @else
           <p class="text-muted mb-0">Pengguna tidak mengunggah foto pada laporan ini.</p>

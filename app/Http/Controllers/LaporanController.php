@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\LaporanSampah;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class LaporanController extends Controller
 {
@@ -50,7 +49,7 @@ class LaporanController extends Controller
         $fotoPath = null;
 
         if ($request->hasFile('foto')) {
-            $fotoPath = Storage::disk('s3')->putFile('laporan-sampah', $request->file('foto'));
+            $fotoPath = $request->file('foto')->store('laporan-sampah', 'public');
         }
 
         LaporanSampah::create([
