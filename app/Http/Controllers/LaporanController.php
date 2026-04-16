@@ -54,8 +54,6 @@ class LaporanController extends Controller
             $request->file('foto')
         );
 
-        dd($fotoPath);
-
         LaporanSampah::create([
             'user_id' => auth()->id(),
             'judul' => $validated['judul'],
